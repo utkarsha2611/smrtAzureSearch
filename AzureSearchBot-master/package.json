@@ -1,0 +1,14 @@
+{
+  "name": "azuresearchbot-master",
+  "version": "1.0.0",
+  "description": "In this demo I'll demonstrate how to use Azure Document DB, Azure Search and the Microsoft Bot Framework to build a bot that searches and filters over an underlying dataset.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.9.1"
+  }
+}
