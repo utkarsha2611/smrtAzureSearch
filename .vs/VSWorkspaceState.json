@@ -2,9 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\AzureSearchBot-master",
+    "\\AzureSearchBot-master\\data",
     "\\AzureSearchBot-master\\Node",
     "\\AzureSearchBot-master\\Node\\dialogs"
   ],
-  "SelectedNode": "\\AzureSearchBot-master\\Node\\app.js",
+  "SelectedNode": "\\AzureSearchBot-master\\Node\\messageHelper.js",
   "PreviewInSolutionExplorer": false
 }

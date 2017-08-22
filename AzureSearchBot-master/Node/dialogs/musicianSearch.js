@@ -3,7 +3,7 @@ const searchHelper = require('../searchHelpers.js');
 const messageHelper = require('../messageHelper.js');
 
 module.exports = {
-    id: 'musicianSearch',
+    id: 'Search',
     title: 'Search',
     dialog: [
         (session) => {
