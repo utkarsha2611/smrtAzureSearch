@@ -4,7 +4,7 @@ const messageHelper = require('../messageHelper.js');
 
 module.exports = {
     id: 'musicianSearch',
-    title: 'Musician Search',
+    title: 'Search',
     dialog: [
         (session) => {
             //Prompt for string input
@@ -17,12 +17,13 @@ module.exports = {
             searchHelper.searchQuery(keyword, (err, result) => {
                 if (err) {
                     console.log(`Search query failed with ${err}`);
-                    session.endConversation(`Sorry, I had an error when talking to the server.`);
+                    session.send('error is ');//, err.message());
+                    session.send(`Sorry, I had an error when talking to the server.`);
                 } else if (result && result.length > 0) {
                     const message = messageHelper.getMusiciansCarousel(session, result);
                     session.endConversation(message);
                 } else {
-                    const message = "I couldn't find any full form by that acronym";
+                    const message = "I couldn't find this";
                     session.endConversation(message);
                 }
                 session.reset('/');

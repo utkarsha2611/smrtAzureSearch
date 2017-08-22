@@ -1,12 +1,15 @@
 const request = require('request');
-const rootQueryString = `https://${process.env.AZURE_SEARCH_NAME}.search.windows.net/indexes/${process.env.AZURE_INDEX_NAME}/docs?api-version=2016-09-01`;
+//const rootQueryString = `https://${process.env.AZURE_SEARCH_NAME}.search.windows.net/indexes/${process.env.AZURE_INDEX_NAME}/docs?api-version=2016-09-01`;
+//const rootQueryString = `https://${process.env.AZURE_SEARCH_NAME}.search.windows.net/indexes/${process.env.AZURE_INDEX_NAME}/docs?api-version=2016-09-01`;
+
+const rootQueryString = 'https://smrtsearch.search.windows.net/indexes/csvindex/docs?api-version=2016-09-01';
 
 module.exports = {
     facetQuery: (facet, callback) => {
         const options = {
             url: `${rootQueryString}&facet=${facet}`,
             headers: {
-                'api-key': `${process.env.AZURE_SEARCH_KEY}`
+                'api-key': `5CBEBBC9695494E48AA8AA53A832DA34`
             }
         }
         request(options, (error, response, body) => {
@@ -27,7 +30,7 @@ module.exports = {
         const options = {
             url: `${rootQueryString}&$filter=${filterName} eq '${filterValue}'`,
             headers: {
-                'api-key': `${process.env.AZURE_SEARCH_KEY}`
+                'api-key': `5CBEBBC9695494E48AA8AA53A832DA34`
             }
         }
         request(options, (error, response, body) => {
@@ -47,7 +50,7 @@ module.exports = {
         const options = {
             url: `${rootQueryString}&search=${keyword}`,
             headers: {
-                'api-key': `${process.env.AZURE_SEARCH_KEY}`
+                'api-key': `5CBEBBC9695494E48AA8AA53A832DA34`
             }
         }
         request(options, (error, response, body) => {

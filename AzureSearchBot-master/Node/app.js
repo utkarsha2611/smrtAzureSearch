@@ -20,19 +20,20 @@ const connector = new builder.ChatConnector({
 // create the bot
 const bot = new builder.UniversalBot(connector, (session) => {
     const message = new builder.Message(session);
-    message.text = 'How would you like to search?';
+    message.text = 'Explore SMRT Dictionary';
     message.attachments([
         new builder.ThumbnailCard(session)
             .buttons([
+               /* builder.CardAction.imBack(
+                    session, dialogs.musicianExplorer.title, c
+                ),*/
                 builder.CardAction.imBack(
-                    session, dialogs.musicianExplorer.title, dialogs.musicianExplorer.title
-                ),
-                builder.CardAction.imBack(
-                    session, dialogs.musicianSearch.title, dialogs.musicianSearch.title
-                )
+                    session, dialogs.musicianSearch.title, 'Search')
             ])
-            .title('How would you like to search?')
+            .title('Explore SMRT Dictionary')
     ]);
+   // if (err) { session.send('error :', err.message());}
+    
     session.endConversation(message);
 });
 

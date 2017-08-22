@@ -4,15 +4,15 @@ module.exports = {
     getMusiciansCarousel: (session, items) => {
         // results found
         var message = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel);
-        items.forEach((musician) => {
+        items.forEach((csv) => {
             // custom card for musician
             // update with your specific fields for output
             message.addAttachment(
                 new builder.HeroCard(session)
-                    .title(musician.Name)
-                    .subtitle("Acronym : " + musician.Era + " | " + "Search Score: " + musician['@search.score'])
-                    .text(musician.Description)
-                    .images([builder.CardImage.create(session, musician.imageURL)])
+                    .title(csv.RowKey)
+                    .subtitle("Acronym : " + csv.PartitionKey)// + " | " + "Search Score: " + musician['@search.score'])
+                    .text("Category : "+csv.Category + " \n\n Type :      " +csv.Type  )
+                   // .images([builder.CardImage.create(session, musician.imageURL)])
             );
         })
         return message;

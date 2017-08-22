@@ -4,11 +4,11 @@
 
     "imageURL": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Johann_Sebastian_Bach.jpg",
 
-    "Name": "Johannes Sebastian Bach",
+    "Name": "PSR",
 
-    "Era": "Classical",
+    "Era": "Locations/Depots/interchanges",
 
-    "Description": "Johann Christian Bach was a composer of the Classical era, the eleventh surviving child and youngest son of Johann Sebastian Bach."
+    "Description": "Pasir Ris, EW1"
 
   },
 
@@ -18,7 +18,7 @@
 
     "Name": "Frederic Chopin",
 
-    "Era": "Romantic",
+    "Era": "Locations/Depots/interchanges",
 
     "Description": "Frédéric François Chopin, born Fryderyk Franciszek Chopin, was a Polish composer and virtuoso pianist of the Romantic era who wrote primarily for the solo piano."
 
@@ -30,7 +30,7 @@
 
     "Name": "Ludwig Van Beethoven",
 
-    "Era": "Romantic",
+    "Era": "Locations/Depots/interchanges",
 
     "Description": "Ludwig van Beethoven was a German composer and pianist. A crucial figure in the transition between the Classical and Romantic eras in Western art music, he remains one of the most famous and influential of all composers."
 
@@ -42,7 +42,7 @@
 
     "Name": "Wolfgang Amadeus Mozart",
 
-    "Era": "Classical",
+    "Era": "Locations/Depots/interchanges",
 
     "Description": "Wolfgang Amadeus Mozart, baptised as Johannes Chrysostomus Wolfgangus Theophilus Mozart, was a prolific and influential composer of the Classical era. Born in Salzburg, Mozart showed prodigious ability from his earliest childhood."
 
@@ -54,7 +54,7 @@
 
     "Name": "George Frideric Handel",
 
-    "Era": "Baroque",
+    "Era": "Locations/Depots/interchanges",
 
     "Description": "George Frideric Handel was a German, later British baroque composer who spent the bulk of his career in London, becoming well known for his operas, oratorios, anthems, and organ concertos."
 
@@ -66,7 +66,7 @@
 
     "Name": "Pyotr Ilyich Tchaikovsky",
 
-    "Era": "Romantic",
+    "Era": "Locations/Depots/interchanges",
 
     "Description": "Pyotr Ilyich Tchaikovsky, often anglicized as Peter Ilyich Tchaikovsky, was a Russian composer of the late-Romantic period, some of whose works are among the most popular music in the classical repertoire."
 
