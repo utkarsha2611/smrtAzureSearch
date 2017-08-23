@@ -39,7 +39,7 @@ var bot = new builder.UniversalBot(connector, { persistConversationData: true })
                 intentDialog.matches('showvideo', '/showvideo');
                 intentDialog.matches('None', '/none');
                 //   .matches('showvideo', '/showvideo');
-                bot.dialog('/sayHi', function (session) { session.send('Hi there! I\'m SMaRT bot and I can help you with SMRT dictionary data and Training videos'); session.endDialog(); })
+                bot.dialog('/sayHi', function (session) { session.send('Hi there! I\'m SMaRT bot and I can help you with SMRT dictionary data and Training videos. Try saying \'Search dictionary\ or \'Show video\''); session.endDialog(); })
 
 bot.dialog('/firstLoad',
     function (session) {
