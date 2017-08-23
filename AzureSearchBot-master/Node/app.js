@@ -6,8 +6,8 @@ const request = require('request');
 const restify = require('restify');
 const builder = require('botbuilder');
 const dialogs = {};
-dialogs.musicianExplorer = require('./dialogs/musicianExplorer.js');
-dialogs.musicianSearch = require('./dialogs/musicianSearch.js');
+//dialogs.musicianExplorer = require('./dialogs/musicianExplorer.js');
+dialogs.musicianSearch = require('./dialogs/Search.js');
 
 //If testing via the emulator, no need for appId and appPassword. If publishing, enter appId and appPassword here 
 
@@ -20,27 +20,6 @@ const connector = new builder.ChatConnector({
     gzipData: true
 
 });
-/*
-// create the bot
-const bot = new builder.UniversalBot(connector, (session) => {
-    const message = new builder.Message(session);
-    message.text = 'Explore SMRT Data repository';
-    message.attachments([
-        new builder.ThumbnailCard(session)
-            .buttons([
-              /*  builder.CardAction.imBack(
-                    session, dialogs.musicianExplorer.title, dialogs.musicianExplorer.title
-                ),*/
-              /*  builder.CardAction.imBack(
-                    session, dialogs.musicianSearch.title, dialogs.musicianSearch.title
-           /*     )
-            ])
-            .title('Explore SMRT Data repository')
-    ]);
-    session.send(message);
-}
-
-);*/
 
 //LUIS Setup
 var recognizer = new builder.LuisRecognizer('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/28abc727-a00e-4e11-9b5e-931c8f54db40?subscription-key=51d9a30fd9054be5809a257ad2c95d3e&verbose=true&timezoneOffset=0&q=');
@@ -91,8 +70,8 @@ bot.dialog('/none', function (session) { session.endDialog('Thanks for using me!
 
 // register the two dialogs
 // musicianExplorer will provide a facet or category based search
-bot.dialog(dialogs.musicianExplorer.id, dialogs.musicianExplorer.dialog)
-    .triggerAction({ matches: new RegExp(dialogs.musicianExplorer.title, 'i') });
+/*bot.dialog(dialogs.musicianExplorer.id, dialogs.musicianExplorer.dialog)
+    .triggerAction({ matches: new RegExp(dialogs.musicianExplorer.title, 'i') });*/
 
 // musicianSearch will provide a classic search
 bot.dialog(dialogs.musicianSearch.id, dialogs.musicianSearch.dialog)
