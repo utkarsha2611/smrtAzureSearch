@@ -9,6 +9,7 @@ const dialogs = {};
 const botauth = require("botauth");
 const path = require("path");
 const envx = require("envx");
+const fs = require('fs');
 
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 const expressSession = require('express-session');
@@ -51,12 +52,22 @@ var recognizer = new builder.LuisRecognizer('https://westus.api.cognitive.micros
 var intentDialog = new builder.IntentDialog({ recognizers: [recognizer] });
 var bot = new builder.UniversalBot(connector, { persistConversationData: true });
 
+var https_options = {
+    key: fs.readFileSync('etc/self.key'),
+    certificate: fs.readFileSync('etc/self.cert')
+};
 
 // Setup Restify Server
-const server = restify.createServer();
+const server = restify.createServer(https_options);
+http_server = restify.createServer();
 
 server.post('/api/messages', connector.listen());
+http_server.post('/api/messages', connector.listen());
 
+
+http_server.listen(3979, () => {
+    console.log('%s listening to %s', server.name, server.url);
+});
 server.listen(3978, () => {
     console.log('%s listening to %s', server.name, server.url);
 });
@@ -64,7 +75,12 @@ server.listen(3978, () => {
 server.get('/code', restify.serveStatic({
     'directory': path.join(__dirname, 'public'),
     'file': 'code.html'
-    }));
+}));
+
+http_server.get('/code', restify.serveStatic({
+    'directory': path.join(__dirname, 'public'),
+    'file': 'code.html'
+}));
 
 //=========================================================
 // Auth Setup
@@ -75,37 +91,37 @@ server.use(restify.bodyParser());
 server.use(expressSession({ secret: BOTAUTH_SECRET, resave: true, saveUninitialized: false }));
 //server.use(passport.initialize());
 
-var ba = new botauth.BotAuthenticator(server, bot, { session: true, baseUrl: `https://${WEBSITE_HOSTNAME}`, secret : BOTAUTH_SECRET, successRedirect: '/code' });
+var ba = new botauth.BotAuthenticator(server, bot, { session: true, baseUrl: `https://${WEBSITE_HOSTNAME}`, secret: BOTAUTH_SECRET, successRedirect: '/code' });
 
 ba.provider("aadv2", (options) => {
     // Use the v2 endpoint (applications configured by apps.dev.microsoft.com)
     // For passport-azure-ad v2.0.0, had to set realm = 'common' to ensure authbot works on azure app service
     let oidStrategyv2 = {
-      redirectUrl: options.callbackURL, //  redirect: /botauth/aadv2/callback
-      realm: AZUREAD_APP_REALM,
-      clientID: AZUREAD_APP_ID,
-      clientSecret: AZUREAD_APP_PASSWORD,
-      identityMetadata: 'https://login.microsoftonline.com/' + AZUREAD_APP_REALM + '/v2.0/.well-known/openid-configuration',
-      skipUserProfile: false,
-      validateIssuer: false,
-      //allowHttpForRedirectUrl: true,
-      responseType: 'code',
-      responseMode: 'query',
-      scope: ['profile', 'User.Read'],
-      passReqToCallback: true
+        redirectUrl: options.callbackURL, //  redirect: /botauth/aadv2/callback
+        realm: AZUREAD_APP_REALM,
+        clientID: AZUREAD_APP_ID,
+        clientSecret: AZUREAD_APP_PASSWORD,
+        identityMetadata: 'https://login.microsoftonline.com/' + AZUREAD_APP_REALM + '/v2.0/.well-known/openid-configuration',
+        skipUserProfile: false,
+        validateIssuer: false,
+        //allowHttpForRedirectUrl: true,
+        responseType: 'code',
+        responseMode: 'query',
+        scope: ['profile', 'User.Read'],
+        passReqToCallback: true
     };
 
     let strategy = oidStrategyv2;
 
     return new OIDCStrategy(strategy,
         (req, iss, sub, profile, accessToken, refreshToken, done) => {
-          if (!profile.displayName) {
-            return done(new Error("No oid found"), null);
-          }
-          profile.accessToken = accessToken;
-          profile.refreshToken = refreshToken;
-          done(null, profile);
-    });
+            if (!profile.displayName) {
+                return done(new Error("No oid found"), null);
+            }
+            profile.accessToken = accessToken;
+            profile.refreshToken = refreshToken;
+            done(null, profile);
+        });
 });
 
 
@@ -122,10 +138,9 @@ bot.dialog("/signin", [].concat(
     ba.authenticate("aadv2"),
     (session, args, skip) => {
         let user = ba.profile(session, "aadv2");
-        session.endDialog(user.displayName);
         session.userData.accessToken = user.accessToken;
         session.userData.refreshToken = user.refreshToken;
-        session.beginDialog('menu');
+        session.endDialog(user.displayName);
     }
 ));
 
@@ -137,21 +152,42 @@ intentDialog.matches(/\b(hello|hi|hey|how are you)\b/i, '/sayHi');
 intentDialog.matches(/\b(groups)\b/, '/getGroups');
 intentDialog.matches(/logout/, "/logout");
 intentDialog.matches(/signin/, "/signin");
+intentDialog.matches(/items/, "/items");
 intentDialog.matches('dict', '/firstLoad');
 intentDialog.matches('showvideo', '/showvideo');
 intentDialog.matches('None', '/none');
 //   .matches('showvideo', '/showvideo');
 bot.dialog('/sayHi', function (session) { session.send('Hi there! I\'m SMaRT bot and I can help you with SMRT dictionary data and Training videos. Try saying \'Search dictionary\ or \'Show video\''); session.endDialog(); })
 
-bot.dialog('/getGroups', [
+bot.dialog('/items', [
     (session, args) => {
-        api.getUserGroups(session.userData.accessToken, (err, body, res) => {
+        api.getUserTitle(session.userData.accessToken, (err, res) => {
             if (err) {
                 session.endDialog(err);
             }
-            session.send(body);
-            session.endDialog(res);
+            var msg = "Unauthorized.";
+            if (res === "hsm") {
+                msg = "HSM must be quipped with and/or don: \n\n a. Handsignalman’s Armband (brown colour) on the left arm; \n\n b. b.Red and yellow flags (when visibility is good) or a handlamp (when visibility is poor) to stop or slow-down the train; \n\n c. High-visibility vest.";
+            } else if (res === "smaster") {
+                msg = "Look out man must be equipped with and/or don:\na. Look-out Man’s Armband (yellow colour) on the left arm;\n\n b. Red and yellow flags (when visibility is good) or a handlamp (when visibility is poor) in case there is a requirement for the LOM to stop or slow-down a train;\n\n c. High-visibility vest;\n\n d. Whistle to warn the working party.\n\n" + "\n\n" +
+                "HSM must be quipped with and/or don: \n\n a. Handsignalman’s Armband (brown colour) on the left arm; \n\n b. b.Red and yellow flags (when visibility is good) or a handlamp (when visibility is poor) to stop or slow-down the train; \n\n c. High-visibility vest.";
+            }
+            session.endDialog(msg);
         })
+    }
+]);
+
+bot.dialog('/getGroups', [
+    (session, args) => {
+        console.log(session.userData.accessToken)
+        api.getUserTitle(session.userData.accessToken, (err, res) => {
+            if (err) {
+                session.endDialog(err);
+            }
+            console.log(res)
+            // session.send(body);
+            session.endDialog(res);
+        });
     }
 ]);
 

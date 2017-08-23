@@ -35,65 +35,21 @@ module.exports = {
         }); 
     },
 
-    getUserGroups: (accessToken, callback) => {
+    getUserTitle: (accessToken, callback) => {
+        console.log('getuserobj')
         var options = {
             method: 'GET',
-            url: 'https://graph.microsoft.com/v1.0/me/memberOf',
-            json: true,
+            url: 'https://graph.microsoft.com/v1.0/me/jobTitle',
+            json:true,
             headers: { 
-                'Content-Type' : 'application/json',
+                // 'Content-Type' : 'application/json',
                 Authorization: 'Bearer ' + accessToken
             }
         };
-        request(options, function (err, res, body) {
+        request(options, function (err, res) {
             if (err) return callback(err, null, null);
-            callback(err, body, res);
-        }); 
-    },
-
-    sendWfhEmail: (accessToken, toEmail, sendWFHData, callback) => {
-        var data = {
-            "Subject": sendWFHData.tbsubject,
-            "Body": {
-            "ContentType": "HTML",
-            "Content": sendWFHData.tbdescription
-            },
-            "Start": {
-                "DateTime": sendWFHData.startdate.toISOString(),
-                "TimeZone": "Asia/Singapore"
-            },
-            "End": {
-                "DateTime": sendWFHData.enddate.toISOString(),
-                "TimeZone": "Asia/Singapore"
-            },
-            "IsAllDay": true,
-            "ResponseRequested": false,
-            "ShowAs": "Free", // https://msdn.microsoft.com/en-us/office/office365/api/complex-types-for-mail-contacts-calendar#FreeBusyStatus
-            "IsReminderOn": false,
-            "Attendees": [
-                {
-                    "EmailAddress": {
-                    "Address": toEmail,
-                    "Name": "My team"
-                    },
-                    "Type": "Required" // Single instance
-                }
-            ]
-        };
-
-        var options = {
-            method: 'POST',
-            url: 'https://outlook.office.com/api/v2.0/me/events',
-            body: data,
-            json: true,
-            headers: { 
-                'Content-Type' : 'application/json',
-                Authorization: 'Bearer ' + accessToken
-            }
-        };
-        request(options, function (err, res, body) {
-            if (err) return callback(err, null, null);
-            callback(err, body, res);
+            console.log(res.body)
+            callback(err, res.body.value);
         }); 
     }
 }
