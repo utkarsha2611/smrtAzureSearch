@@ -12,7 +12,7 @@ module.exports = {
                     .title(csv.RowKey)
                     .subtitle("Acronym : " + csv.PartitionKey)// + " | " + "Search Score: " + musician['@search.score'])
                     .text("Category : "+csv.Category + " \n\n Type :      " +csv.Type  )
-                    .images([builder.CardImage.create(session, musician.imageURL)])
+                    .images([builder.CardImage.create(session, 'https://raw.githubusercontent.com/utkarsha2611/smrtAzureSearch/master/AzureSearchBot-master/images/smrt.PNG')])
             );
         })
         return message;

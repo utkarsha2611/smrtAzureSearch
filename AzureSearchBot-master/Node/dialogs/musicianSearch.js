@@ -24,9 +24,10 @@ module.exports = {
                     session.endConversation(message);
                 } else {
                     const message = "I couldn't find this";
-                    session.endConversation(message);
+                    //session.send('Anything else you need me to help with ?');
+                    session.send(message);
                 }
-                session.reset('/');
+               
             });
         }
     ]

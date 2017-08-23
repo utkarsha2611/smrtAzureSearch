@@ -1,27 +1,53 @@
-const builder = require('botbuilder');
-const searchHelper = require('../searchHelpers.js');
-const messageHelper = require('../messageHelper.js');
+var restify = require('restify');
+var builder = require('botbuilder');
+var rp = require('request-promise');
 
 
-// connecting with LUIS
-var luisRecognizer = new builder.LuisRecognizer(process.env.LUIS_MODEL_URL || "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/12046620-4a2d-48e9-87f4-caf6d75c9b2e?subscription-key=7c029b229e924655a57eb8afe6dc990a&verbose=true&timezoneOffset=0&q=");
-var intentDialog = new builder.IntentDialog({ recognizers: [luisRecognizer] });
+//=========================================================
+// Bot Setup
+//=========================================================
+
+// Setup Restify Server
+var server = restify.createServer();
+server.listen(process.env.port || process.env.PORT || 3978, function () {
+    console.log('%s listening to %s', server.name, server.url);
+});
+
+// Create chat bot
+// You will need to replace process env... with your own app id and password
+var connector = new builder.ChatConnector({
+    appId: process.env.MICROSOFT_APP_ID,
+    appPassword: process.env.MICROSOFT_APP_PASSWORD
+});
 
 module.exports = {
-    id: 'Video',
-    title: 'Video',
+    id: 'musicianExplorer',
+    title: 'Musician Explorer',
     dialog: [
         (session) => {
-            //Prompt for string input
-            builder.Prompts.text(session, 'What are you searching for?');
-        },
-        (session, results) => {
-            //Sets name equal to resulting input
-            //const keyword = results.response;
-            intentDialog.matches(/\b(hi|hello|hey|howdy|what's up)\b/i, '/signin') //Check for greetings using regex
-                .matches(/logout/, "/logout");
-            
-        }
-    ]
-}
+            var bot = new builder.UniversalBot(connector);
+            server.post('/api/messages', connector.listen());
 
+
+            var intents = new builder.IntentDialog();
+
+            //=========================================================
+            // Bots Dialogs
+            //=========================================================
+            // Regexes are checked before sending to LUIS (if you used LUIS) so that you don't unnecessarily waste calls
+            // Detects keywords in what the user says
+            intents.matches(keywords.hi, '/sayHi');
+
+            intents.onDefault(builder.DialogAction.send("Hmm I'm not too sure what you're trying to say."));
+
+            bot.dialog('/', intents);
+
+            bot.dialog('/showvideo', [
+                function (session) {
+                    session.endDialog('https://www.youtube.com/watch?v=zZb7dchCI2A');
+                }
+            ]);
+
+
+        }]
+}
