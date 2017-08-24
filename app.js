@@ -52,32 +52,32 @@ var recognizer = new builder.LuisRecognizer('https://westus.api.cognitive.micros
 var intentDialog = new builder.IntentDialog({ recognizers: [recognizer] });
 var bot = new builder.UniversalBot(connector, { persistConversationData: true });
 
-var https_options = {
-    key: fs.readFileSync('etc/self.key'),
-    certificate: fs.readFileSync('etc/self.cert')
-};
+// var https_options = {
+//     key: fs.readFileSync('etc/self.key'),
+//     certificate: fs.readFileSync('etc/self.cert')
+// };
 
 // Setup Restify Server
-const server = restify.createServer(https_options);
-http_server = restify.createServer();
+// const server = restify.createServer(https_options);
+server = restify.createServer();
 
+// server.post('/api/messages', connector.listen());
 server.post('/api/messages', connector.listen());
-http_server.post('/api/messages', connector.listen());
 
 
-http_server.listen(3979, () => {
+server.listen(3979, () => {
     console.log('%s listening to %s', server.name, server.url);
 });
-server.listen(3978, () => {
-    console.log('%s listening to %s', server.name, server.url);
-});
+// server.listen(3978, () => {
+//     console.log('%s listening to %s', server.name, server.url);
+// });
+
+// server.get('/code', restify.serveStatic({
+//     'directory': path.join(__dirname, 'public'),
+//     'file': 'code.html'
+// }));
 
 server.get('/code', restify.serveStatic({
-    'directory': path.join(__dirname, 'public'),
-    'file': 'code.html'
-}));
-
-http_server.get('/code', restify.serveStatic({
     'directory': path.join(__dirname, 'public'),
     'file': 'code.html'
 }));
